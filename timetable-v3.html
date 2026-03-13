@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>开票仪表盘 · 武汉 郑州</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06060E;
+  --s1:#0C0C18;
+  --s2:#11111F;
+  --border:#1C1C30;
+  --border2:#242438;
+  --text:#EEEEF8;
+  --sub:#8888AA;
+  --dim:#2A2A42;
+  --glow1:#FF4D6D;
+  --glow2:#C77DFF;
+  --glow3:#48CAE4;
+  --green:#52E5A0;
+  --orange:#FFB347;
+  --mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Noto Sans SC',sans-serif;
+  min-height:100vh;padding:0 0 100px;overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 700px 500px at 5% 15%,#FF4D6D0A 0%,transparent 70%),
+    radial-gradient(ellipse 600px 600px at 95% 85%,#C77DFF0A 0%,transparent 70%),
+    radial-gradient(ellipse 500px 350px at 50% 50%,#48CAE406 0%,transparent 60%);
+  pointer-events:none;z-index:0;
+}
+
+/* ── LAYOUT ── */
+.page{max-width:1100px;margin:0 auto;padding:0 36px;position:relative;z-index:1}
+
+/* ── TOP BAR ── */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:28px 0 22px;border-bottom:1px solid var(--border);margin-bottom:36px;
+  flex-wrap:wrap;gap:14px;
+}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{
+  width:40px;height:40px;border-radius:11px;
+  background:linear-gradient(135deg,var(--glow1),var(--glow2));
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.logo-text{font-size:18px;font-weight:700;letter-spacing:-0.01em}
+.logo-sub{font-size:12px;color:var(--sub);margin-top:2px;letter-spacing:0.08em}
+.topbar-actions{display:flex;gap:10px;align-items:center}
+.city-tab{
+  padding:8px 18px;border-radius:8px;border:1px solid var(--border2);
+  background:var(--s1);color:var(--sub);font-size:13px;font-family:inherit;
+  cursor:pointer;transition:all .2s;font-weight:500;
+}
+.city-tab.active-wh{border-color:var(--glow1)60;color:var(--glow1);background:#FF4D6D0A}
+.city-tab.active-zz{border-color:var(--glow3)60;color:var(--glow3);background:#48CAE40A}
+.city-tab.active-all{border-color:var(--glow2)60;color:var(--glow2);background:#C77DFF0A}
+.ics-btn{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 18px;border-radius:8px;
+  background:linear-gradient(135deg,var(--glow1)CC,var(--glow2)CC);
+  border:none;color:#fff;font-size:13px;font-family:inherit;
+  cursor:pointer;transition:opacity .2s;font-weight:600;letter-spacing:.04em;
+}
+.ics-btn:hover{opacity:.85}
+
+/* ── MAIN GRID ── */
+.main-grid{display:block;}
+
+/* ── INFO PANELS (bottom flat row) ── */
+.info-panels{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+  margin-top:32px;
+}
+@media(max-width:800px){.info-panels{grid-template-columns:1fr}}
+
+/* ── HERO ── */
+.hero{
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:18px;padding:32px 36px 28px;
+  position:relative;overflow:hidden;margin-bottom:24px;
+}
+.hero::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 400px 250px at 110% -10%,var(--glow1)15%,transparent 60%);
+  opacity:.06;pointer-events:none;
+}
+.hero-eyebrow{
+  display:flex;align-items:center;gap:8px;
+  font-size:12px;letter-spacing:.18em;color:var(--sub);
+  margin-bottom:20px;text-transform:uppercase;
+}
+.live-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 7px var(--green);animation:blink 1.4s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-body{display:flex;align-items:flex-start;justify-content:space-between;gap:28px;flex-wrap:wrap}
+.hero-event-name{font-size:26px;font-weight:900;letter-spacing:-0.02em;line-height:1.2;margin-bottom:8px}
+.hero-event-meta{font-size:14px;color:var(--sub);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.meta-pill{padding:3px 10px;border-radius:20px;border:1px solid;font-size:12px;font-weight:600;letter-spacing:.06em}
+.cd-row{display:flex;align-items:flex-end;gap:4px;margin-top:6px}
+.cd-unit{text-align:center;min-width:64px}
+.cd-num{
+  font-family:var(--mono);font-size:44px;font-weight:500;
+  color:var(--glow1);line-height:1;display:block;
+  text-shadow:0 0 30px var(--glow1)50;letter-spacing:-0.02em;
+}
+.cd-label{font-size:11px;color:var(--sub);letter-spacing:.12em;margin-top:5px}
+.cd-colon{font-family:var(--mono);font-size:38px;color:var(--dim);padding-bottom:12px;line-height:1}
+.all-done{font-size:18px;color:var(--green);font-weight:700;padding:10px 0}
+.hero-progress{margin-top:28px}
+.hp-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--sub);margin-bottom:8px;letter-spacing:.04em}
+.hp-track{height:4px;background:var(--dim);border-radius:4px;overflow:hidden}
+.hp-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--glow1),var(--glow2));transition:width .8s cubic-bezier(.22,1,.36,1)}
+
+/* ── OVERALL PROGRESS ── */
+.overall{
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:14px;padding:22px 28px;margin-bottom:24px;
+}
+.overall-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.overall-title{font-size:13px;letter-spacing:.14em;color:var(--sub);text-transform:uppercase}
+.overall-frac{font-family:var(--mono);font-size:14px;color:var(--sub)}
+.overall-frac span{color:var(--text);font-weight:500}
+.steps{display:flex;gap:0;align-items:center;overflow-x:auto;padding-bottom:4px}
+.step{flex:1;position:relative;min-width:32px}
+.step-dot{
+  width:11px;height:11px;border-radius:50%;
+  border:2px solid var(--dim);background:var(--bg);
+  margin:0 auto;position:relative;z-index:2;transition:all .4s;
+}
+.step.done .step-dot{background:var(--green);border-color:var(--green);box-shadow:0 0 8px var(--green)50}
+.step.active .step-dot{background:var(--glow1);border-color:var(--glow1);box-shadow:0 0 10px var(--glow1)70}
+.step-line{position:absolute;top:5px;left:50%;right:-50%;height:2px;background:var(--dim);z-index:1}
+.step.done .step-line{background:var(--green)}
+.step:last-child .step-line{display:none}
+.step-name{font-size:10px;color:var(--sub);margin-top:8px;text-align:center;letter-spacing:.03em;line-height:1.3}
+.step.done .step-name{color:var(--green)}
+.step.active .step-name{color:var(--glow1)}
+
+/* ── SIDEBAR STATS ── */
+.sidebar{}
+.stat-card{
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:14px;padding:22px 24px;margin-bottom:16px;
+}
+.stat-label{font-size:12px;color:var(--sub);letter-spacing:.1em;margin-bottom:10px;text-transform:uppercase}
+.stat-city-row{display:flex;gap:10px;margin-bottom:10px}
+.stat-city{
+  flex:1;background:var(--s2);border:1px solid var(--border2);
+  border-radius:10px;padding:12px 14px;
+}
+.stat-city-name{font-size:12px;font-weight:700;margin-bottom:5px}
+.stat-city-num{font-family:var(--mono);font-size:24px;font-weight:500;line-height:1}
+.stat-city-sub{font-size:11px;color:var(--sub);margin-top:3px}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--dim)}
+.stat-row:last-child{border-bottom:none}
+.stat-row-label{font-size:13px;color:var(--sub)}
+.stat-row-val{font-family:var(--mono);font-size:13px;font-weight:500}
+
+/* ── TIMELINE ── */
+.tl-section{margin-top:0}
+.tl-header{
+  display:flex;align-items:center;gap:12px;
+  font-size:13px;letter-spacing:.14em;color:var(--sub);
+  text-transform:uppercase;margin-bottom:20px;
+}
+.tl-header::after{content:'';flex:1;height:1px;background:var(--dim)}
+.tl-filters{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.tl-filter{
+  padding:6px 14px;border-radius:20px;border:1px solid var(--border2);
+  background:var(--s1);color:var(--sub);font-size:12px;font-family:inherit;
+  cursor:pointer;transition:all .2s;
+}
+.tl-filter.on{border-color:currentColor}
+.tl-filter.f-wh.on{color:var(--glow1);background:#FF4D6D0A}
+.tl-filter.f-zz.on{color:var(--glow3);background:#48CAE40A}
+.tl-filter.f-all.on{color:var(--glow2);background:#C77DFF0A}
+
+.timeline{position:relative}
+.tl-spine{
+  position:absolute;left:148px;top:6px;bottom:6px;width:1px;
+  background:linear-gradient(180deg,transparent,var(--dim) 5%,var(--dim) 95%,transparent);
+}
+.tl-group{margin-bottom:10px;opacity:0;transform:translateY(10px);animation:fadeUp .5s ease forwards}
+.tl-group:nth-child(1){animation-delay:.04s}
+.tl-group:nth-child(2){animation-delay:.08s}
+.tl-group:nth-child(3){animation-delay:.12s}
+.tl-group:nth-child(4){animation-delay:.16s}
+.tl-group:nth-child(5){animation-delay:.20s}
+.tl-group:nth-child(6){animation-delay:.24s}
+.tl-group:nth-child(7){animation-delay:.28s}
+.tl-group:nth-child(8){animation-delay:.32s}
+.tl-group:nth-child(9){animation-delay:.36s}
+.tl-group:nth-child(10){animation-delay:.40s}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+.tl-row{display:flex;align-items:stretch;margin-bottom:8px}
+.tl-date{
+  width:148px;flex-shrink:0;text-align:right;
+  padding-right:24px;padding-top:16px;
+}
+.tl-date-main{font-size:16px;font-weight:700;letter-spacing:-.01em}
+.tl-date-day{font-size:12px;color:var(--sub);margin-top:3px;letter-spacing:.05em}
+.tl-node{flex-shrink:0;width:0;display:flex;flex-direction:column;align-items:center;padding-top:20px}
+.tl-dot{width:10px;height:10px;border-radius:50%;margin-left:-5px;flex-shrink:0;position:relative;z-index:2}
+.tl-events{flex:1;padding-left:24px;display:flex;flex-direction:column;gap:8px}
+
+.ev-card{
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:11px;padding:14px 18px;
+  display:flex;align-items:center;gap:14px;
+  transition:all .2s;cursor:default;position:relative;overflow:hidden;
+}
+.ev-card::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:3px;border-radius:3px 0 0 3px;
+  background:currentColor;opacity:0;transition:opacity .2s;
+}
+.ev-card:hover{background:var(--s2);transform:translateX(5px)}
+.ev-card:hover::before{opacity:1}
+.ev-card.is-next{border-color:var(--glow1)50;background:linear-gradient(135deg,#FF4D6D07,var(--s1))}
+.ev-card.is-past{opacity:.38}
+.ev-time{font-family:var(--mono);font-size:13px;color:var(--sub);min-width:38px;letter-spacing:.02em}
+.ev-sep{width:1px;height:28px;background:var(--dim);flex-shrink:0}
+.ev-ico{font-size:17px;flex-shrink:0}
+.ev-body{flex:1;min-width:0}
+.ev-body strong{font-size:14px;font-weight:600;display:block;margin-bottom:3px;line-height:1.2}
+.ev-body small{font-size:12px;color:var(--sub)}
+.ev-right{flex-shrink:0;text-align:right}
+.ev-tag{font-size:11px;font-weight:700;letter-spacing:.08em;padding:3px 9px;border-radius:5px;border:1px solid;display:block;margin-bottom:6px}
+.tag-a{background:#FF4D6D10;border-color:#FF4D6D30;color:var(--glow1)}
+.tag-c{background:#C77DFF10;border-color:#C77DFF30;color:var(--glow2)}
+.tag-p{background:#48CAE410;border-color:#48CAE430;color:var(--glow3)}
+.tag-i{background:#FFB34710;border-color:#FFB34730;color:var(--orange)}
+.tag-s{background:#52E5A010;border-color:#52E5A030;color:var(--green)}
+.ev-mini-cd{font-family:var(--mono);font-size:12px;color:var(--glow1);letter-spacing:.02em;white-space:nowrap}
+.ev-mini-cd.is-done{color:var(--green)}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(60px);
+  background:var(--s2);border:1px solid var(--border2);
+  border-radius:12px;padding:13px 24px;
+  font-size:14px;color:var(--text);z-index:999;
+  transition:transform .3s cubic-bezier(.22,1,.36,1),opacity .3s;
+  opacity:0;pointer-events:none;white-space:nowrap;
+  box-shadow:0 8px 40px #00000090;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+@media(max-width:700px){
+  .page{padding:0 16px}
+  .tl-date{width:100px;font-size:13px}
+  .tl-spine{left:100px}
+  .cd-num{font-size:32px}.cd-unit{min-width:48px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="logo">
+      <div class="logo-icon">🎫</div>
+      <div>
+        <div class="logo-text">开票仪表盘</div>
+        <div class="logo-sub">单依纯「纯妹妹2.0」2026巡回演唱会</div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button class="city-tab active-all" id="filterAll" onclick="setFilter('all')">全部</button>
+      <button class="city-tab" id="filterWH" onclick="setFilter('wh')">武汉</button>
+      <button class="city-tab" id="filterZZ" onclick="setFilter('zz')">郑州</button>
+      <button class="ics-btn" onclick="downloadICS()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        导出日历 .ics
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="main-grid">
+      <!-- HERO -->
+      <div class="hero">
+        <div class="hero-eyebrow"><div class="live-dot"></div>距下一个时间节点</div>
+        <div class="hero-body">
+          <div>
+            <div class="hero-event-name" id="heroName">—</div>
+            <div class="hero-event-meta">
+              <span id="heroDate" style="color:var(--sub)">—</span>
+              <span class="meta-pill" id="heroCityPill" style="border-color:var(--glow1)40;color:var(--glow1)">—</span>
+            </div>
+          </div>
+          <div>
+            <div class="cd-row" id="cdRow">
+              <div class="cd-unit"><span class="cd-num" id="cdD">--</span><div class="cd-label">天</div></div>
+              <span class="cd-colon">:</span>
+              <div class="cd-unit"><span class="cd-num" id="cdH">--</span><div class="cd-label">时</div></div>
+              <span class="cd-colon">:</span>
+              <div class="cd-unit"><span class="cd-num" id="cdM">--</span><div class="cd-label">分</div></div>
+              <span class="cd-colon">:</span>
+              <div class="cd-unit"><span class="cd-num" id="cdS">--</span><div class="cd-label">秒</div></div>
+            </div>
+            <div class="all-done" id="allDone" style="display:none">🎉 全部节点已完成</div>
+          </div>
+        </div>
+        <div class="hero-progress">
+          <div class="hp-meta">
+            <span id="hpFrom">—</span>
+            <span id="hpPct">0%</span>
+            <span id="hpTo">—</span>
+          </div>
+          <div class="hp-track"><div class="hp-fill" id="hpFill" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <!-- OVERALL PROGRESS -->
+      <div class="overall">
+        <div class="overall-top">
+          <div class="overall-title">整体进度</div>
+          <div class="overall-frac"><span id="stepDone">0</span> / <span id="stepTotal">—</span> 已完成</div>
+        </div>
+        <div class="steps" id="stepsRow"></div>
+      </div>
+
+      <!-- TIMELINE -->
+      <div class="tl-section">
+        <div class="tl-header">时间轴明细</div>
+        <div class="timeline">
+          <div class="tl-spine" id="tlSpine"></div>
+          <div id="tlContainer"></div>
+        </div>
+      </div>
+
+      <!-- INFO PANELS -->
+      <div class="info-panels">
+        <div class="stat-card">
+          <div class="stat-label">城市场次</div>
+          <div class="stat-city-row">
+            <div class="stat-city" style="border-color:var(--glow1)30">
+              <div class="stat-city-name" style="color:var(--glow1)">武汉</div>
+              <div class="stat-city-num" style="color:var(--glow1)">3</div>
+              <div class="stat-city-sub">4月10·11·12日</div>
+            </div>
+            <div class="stat-city" style="border-color:var(--glow3)30">
+              <div class="stat-city-name" style="color:var(--glow3)">郑州</div>
+              <div class="stat-city-num" style="color:var(--glow3)">2</div>
+              <div class="stat-city-sub">4月25·26日</div>
+            </div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">关键时间节点</div>
+          <div class="stat-row">
+            <span class="stat-row-label">武汉预售</span>
+            <span class="stat-row-val" style="color:var(--glow1)">3月16日</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-row-label">郑州倒计时</span>
+            <span class="stat-row-val" style="color:var(--glow3)">3月20日</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-row-label">郑州预售</span>
+            <span class="stat-row-val" style="color:var(--glow3)">3月23日</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-row-label">退票截止</span>
+            <span class="stat-row-val" style="color:var(--glow2)">3月29日</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">节点类型说明</div>
+          <div class="stat-row"><span class="ev-tag tag-a" style="display:inline-block;margin:0">官宣</span><span class="stat-row-label" style="font-size:12px;margin-left:8px">正式公告发布</span></div>
+          <div class="stat-row"><span class="ev-tag tag-c" style="display:inline-block;margin:0">倒计时</span><span class="stat-row-label" style="font-size:12px;margin-left:8px">开售前倒计时上线</span></div>
+          <div class="stat-row"><span class="ev-tag tag-i" style="display:inline-block;margin:0">公告图</span><span class="stat-row-label" style="font-size:12px;margin-left:8px">场次公告图/发图</span></div>
+          <div class="stat-row"><span class="ev-tag tag-p" style="display:inline-block;margin:0">预售</span><span class="stat-row-label" style="font-size:12px;margin-left:8px">正式开票</span></div>
+          <div class="stat-row"><span class="ev-tag tag-s" style="display:inline-block;margin:0">数据</span><span class="stat-row-label" style="font-size:12px;margin-left:8px">预约量/缺货登记更新</span></div>
+        </div>
+      </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ── ALL EVENTS (sorted by date+time) ──
+const ALL_EVENTS = [
+  // 3月13日
+  {id:0,  date:'2026-03-13',time:'12:23',name:'官宣上架',            desc:'武汉 · 郑州站正式官宣',             city:'武汉/郑州', icon:'📢', tag:'announce', color:'#FF4D6D'},
+  {id:1,  date:'2026-03-13',time:'15:23',name:'武汉 · 倒计时开启',  desc:'武汉场次倒计时开始',                 city:'武汉',      icon:'⏳', tag:'countdown',color:'#C77DFF'},
+  // 3月14日
+  {id:2,  date:'2026-03-14',time:'12:30',name:'预约量公布',          desc:'武汉 · 郑州预约量数据更新',         city:'武汉/郑州', icon:'📊', tag:'stats',    color:'#52E5A0'},
+  {id:18, date:'2026-03-14',time:'18:00',name:'武汉 · 发图',        desc:'武汉场次相关图片发布',               city:'武汉',      icon:'🖼', tag:'notice',   color:'#FFB347'},
+  // 3月15日
+  {id:3,  date:'2026-03-15',time:'12:23',name:'武汉 · 上公告图',    desc:'武汉场次公告图正式发布',             city:'武汉',      icon:'🖼', tag:'notice',   color:'#FFB347'},
+  {id:4,  date:'2026-03-15',time:'17:00',name:'武汉 · 预约量更新',  desc:'武汉预约量数据更新',                 city:'武汉',      icon:'📊', tag:'stats',    color:'#52E5A0'},
+  // 3月16日
+  {id:5,  date:'2026-03-16',time:'12:23',name:'武汉预售 · 4月10日场',desc:'武汉 4月10日场次预售开启',         city:'武汉',      icon:'🎫', tag:'presale',  color:'#48CAE4'},
+  {id:6,  date:'2026-03-16',time:'12:53',name:'武汉预售 · 4月11日场',desc:'武汉 4月11日场次预售开启',         city:'武汉',      icon:'🎫', tag:'presale',  color:'#48CAE4'},
+  {id:7,  date:'2026-03-16',time:'13:23',name:'武汉预售 · 4月12日场',desc:'武汉 4月12日场次预售开启',         city:'武汉',      icon:'🎫', tag:'presale',  color:'#48CAE4'},
+  // 3月17日
+  {id:8,  date:'2026-03-17',time:'13:00',name:'武汉 · 缺货登记数',  desc:'武汉缺货登记数量公布',               city:'武汉',      icon:'📈', tag:'stats',    color:'#52E5A0'},
+  // 3月19日
+  {id:9,  date:'2026-03-19',time:'11:00',name:'武汉 · 缺货登记数',  desc:'武汉缺货登记数量更新',               city:'武汉',      icon:'📈', tag:'stats',    color:'#52E5A0'},
+  // 3月20日
+  {id:10, date:'2026-03-20',time:'12:23',name:'郑州 · 倒计时开启',  desc:'郑州场次倒计时开始',                 city:'郑州',      icon:'⏳', tag:'countdown',color:'#C77DFF'},
+  // 3月21日
+  {id:11, date:'2026-03-21',time:'12:30',name:'郑州 · 预约量公布',  desc:'郑州预约量数据更新',                 city:'郑州',      icon:'📊', tag:'stats',    color:'#52E5A0'},
+  // 3月22日
+  {id:12, date:'2026-03-22',time:'12:23',name:'郑州 · 上公告图',    desc:'郑州场次公告图正式发布',             city:'郑州',      icon:'🖼', tag:'notice',   color:'#FFB347'},
+  {id:13, date:'2026-03-22',time:'17:00',name:'郑州 · 预约量更新',  desc:'郑州预约量数据更新',                 city:'郑州',      icon:'📊', tag:'stats',    color:'#52E5A0'},
+  // 3月23日
+  {id:14, date:'2026-03-23',time:'12:23',name:'郑州预售 · 4月25日场',desc:'郑州 4月25日场次预售开启',         city:'郑州',      icon:'🎫', tag:'presale',  color:'#48CAE4'},
+  {id:15, date:'2026-03-23',time:'12:53',name:'郑州预售 · 4月26日场',desc:'郑州 4月26日场次预售（间隔暂定）', city:'郑州',      icon:'🎫', tag:'presale',  color:'#48CAE4'},
+  // 3月24日
+  {id:16, date:'2026-03-24',time:'13:00',name:'郑州 · 缺货登记数',  desc:'郑州缺货登记数量公布',               city:'郑州',      icon:'📈', tag:'stats',    color:'#52E5A0'},
+  // 3月27日
+  {id:17, date:'2026-03-27',time:'11:00',name:'武汉 · 缺货登记数',  desc:'武汉缺货登记数量更新',               city:'武汉',      icon:'📈', tag:'stats',    color:'#52E5A0'},
+];
+
+// Group definitions (date → events)
+const GROUP_META = {
+  '2026-03-13':{label:'3月13日',day:'周五',color:'#FF4D6D'},
+  '2026-03-14':{label:'3月14日',day:'周六',color:'#C77DFF'},
+  '2026-03-15':{label:'3月15日',day:'周日',color:'#FFB347'},
+  '2026-03-16':{label:'3月16日',day:'周一',color:'#48CAE4'},
+  '2026-03-17':{label:'3月17日',day:'周二',color:'#52E5A0'},
+  '2026-03-19':{label:'3月19日',day:'周四',color:'#52E5A0'},
+  '2026-03-20':{label:'3月20日',day:'周五',color:'#C77DFF'},
+  '2026-03-21':{label:'3月21日',day:'周六',color:'#52E5A0'},
+  '2026-03-22':{label:'3月22日',day:'周日',color:'#FFB347'},
+  '2026-03-23':{label:'3月23日',day:'周一',color:'#48CAE4'},
+  '2026-03-24':{label:'3月24日',day:'周二',color:'#52E5A0'},
+  '2026-03-27':{label:'3月27日',day:'周五',color:'#52E5A0'},
+};
+
+let currentFilter = 'all';
+
+function getTS(ev){
+  const [y,mo,d]=ev.date.split('-').map(Number);
+  const [h,m]=ev.time.split(':').map(Number);
+  return new Date(y,mo-1,d,h,m,0,0).getTime();
+}
+function pad(n){return String(Math.max(0,Math.floor(n))).padStart(2,'0')}
+
+function tagClass(t){
+  return {announce:'tag-a',countdown:'tag-c',presale:'tag-p',notice:'tag-i',stats:'tag-s'}[t]||'tag-a';
+}
+function tagLabel(t){
+  return {announce:'官宣',countdown:'倒计时',presale:'预售',notice:'公告图',stats:'数据'}[t]||t;
+}
+
+function filteredEvents(){
+  if(currentFilter==='wh') return ALL_EVENTS.filter(e=>e.city.includes('武汉'));
+  if(currentFilter==='zz') return ALL_EVENTS.filter(e=>e.city.includes('郑州'));
+  return ALL_EVENTS;
+}
+
+function setFilter(f){
+  currentFilter=f;
+  ['all','wh','zz'].forEach(k=>{
+    const btn=document.getElementById('filter'+{all:'All',wh:'WH',zz:'ZZ'}[k]);
+    btn.className='city-tab'+({all:' active-all',wh:' active-wh',zz:' active-zz'}[k]);
+    if(k!==f) btn.className='city-tab';
+  });
+  document.getElementById('filter'+{all:'All',wh:'WH',zz:'ZZ'}[f]).className='city-tab '+{all:'active-all',wh:'active-wh',zz:'active-zz'}[f];
+  buildStepper();
+  buildTimeline();
+}
+
+// ── Build Stepper ──
+function buildStepper(){
+  const evs=filteredEvents();
+  const row=document.getElementById('stepsRow');
+  row.innerHTML='';
+  document.getElementById('stepTotal').textContent=evs.length;
+  evs.forEach((ev)=>{
+    const s=document.createElement('div');
+    s.className='step';s.id='step-ev-'+ev.id;
+    s.innerHTML=`<div class="step-line"></div><div class="step-dot"></div><div class="step-name">${ev.date.slice(5).replace('-','/')}<br>${ev.time}</div>`;
+    row.appendChild(s);
+  });
+}
+
+// ── Build Timeline ──
+function buildTimeline(){
+  const evs=filteredEvents();
+  const container=document.getElementById('tlContainer');
+  container.innerHTML='';
+  // group by date
+  const dateOrder=[...new Set(evs.map(e=>e.date))];
+  dateOrder.forEach((dateKey,gi)=>{
+    const meta=GROUP_META[dateKey];
+    const dayEvs=evs.filter(e=>e.date===dateKey);
+    const grpEl=document.createElement('div');
+    grpEl.className='tl-group';
+    let evHTML='';
+    dayEvs.forEach(ev=>{
+      evHTML+=`
+      <div class="ev-card" id="evc-${ev.id}" style="color:${ev.color}">
+        <span class="ev-time">${ev.time}</span>
+        <div class="ev-sep"></div>
+        <span class="ev-ico">${ev.icon}</span>
+        <div class="ev-body">
+          <strong>${ev.name}</strong>
+          <small>${ev.desc}</small>
+        </div>
+        <div class="ev-right">
+          <span class="ev-tag ${tagClass(ev.tag)}">${tagLabel(ev.tag)}</span>
+          <div class="ev-mini-cd" id="mcd-${ev.id}">—</div>
+        </div>
+      </div>`;
+    });
+    grpEl.innerHTML=`
+      <div class="tl-row">
+        <div class="tl-date">
+          <div class="tl-date-main" style="color:${meta.color}">${meta.label}</div>
+          <div class="tl-date-day">${meta.day}</div>
+        </div>
+        <div class="tl-node">
+          <div class="tl-dot" style="background:${meta.color};box-shadow:0 0 10px ${meta.color}80"></div>
+        </div>
+        <div class="tl-events">${evHTML}</div>
+      </div>`;
+    container.appendChild(grpEl);
+  });
+}
+
+// ── Tick ──
+function tick(){
+  const now=Date.now();
+  const evs=filteredEvents();
+  const timestamps=ALL_EVENTS.reduce((m,e)=>{m[e.id]=getTS(e);return m},{});
+
+  // next event from full list
+  let nextEv=null;
+  for(const e of ALL_EVENTS){
+    if(timestamps[e.id]>now){nextEv=e;break;}
+  }
+
+  // stepper
+  const doneCount=evs.filter(e=>timestamps[e.id]<=now).length;
+  document.getElementById('stepDone').textContent=doneCount;
+  evs.forEach(ev=>{
+    const s=document.getElementById('step-ev-'+ev.id);
+    if(!s) return;
+    s.classList.remove('done','active');
+    if(timestamps[ev.id]<=now) s.classList.add('done');
+    else if(nextEv&&ev.id===nextEv.id) s.classList.add('active');
+  });
+
+  // hero
+  if(nextEv){
+    const diff=timestamps[nextEv.id]-now;
+    const prevEv=ALL_EVENTS.slice().reverse().find(e=>timestamps[e.id]<=now);
+    const totMs=prevEv?timestamps[nextEv.id]-timestamps[prevEv.id]:timestamps[nextEv.id]-now;
+    const pct=Math.min(100,Math.max(0,Math.round((1-(diff/totMs))*100)));
+    document.getElementById('heroName').textContent=nextEv.name;
+    document.getElementById('heroDate').textContent=nextEv.date.slice(5).replace('-','月')+'日 '+nextEv.time;
+    document.getElementById('heroCityPill').textContent=nextEv.city;
+    document.getElementById('heroCityPill').style.color=nextEv.color;
+    document.getElementById('heroCityPill').style.borderColor=nextEv.color+'40';
+    document.getElementById('cdD').textContent=pad(Math.floor(diff/86400000));
+    document.getElementById('cdH').textContent=pad(Math.floor(diff/3600000)%24);
+    document.getElementById('cdM').textContent=pad(Math.floor(diff/60000)%60);
+    document.getElementById('cdS').textContent=pad(Math.floor(diff/1000)%60);
+    document.getElementById('cdRow').style.display='';
+    document.getElementById('allDone').style.display='none';
+    document.getElementById('hpFill').style.width=pct+'%';
+    document.getElementById('hpPct').textContent=pct+'%';
+    document.getElementById('hpFrom').textContent=prevEv?prevEv.date.slice(5).replace('-','月')+'日 '+prevEv.time:'起点';
+    document.getElementById('hpTo').textContent=nextEv.date.slice(5).replace('-','月')+'日 '+nextEv.time;
+  } else {
+    document.getElementById('cdRow').style.display='none';
+    document.getElementById('allDone').style.display='';
+    document.getElementById('heroName').textContent='全部场次预售已完成';
+    document.getElementById('heroDate').textContent='感谢关注，祝购票顺利！';
+    document.getElementById('hpFill').style.width='100%';
+    document.getElementById('hpPct').textContent='100%';
+  }
+
+  // mini countdowns
+  evs.forEach(ev=>{
+    const card=document.getElementById('evc-'+ev.id);
+    const mcd=document.getElementById('mcd-'+ev.id);
+    if(!card||!mcd) return;
+    const diff=timestamps[ev.id]-now;
+    card.classList.remove('is-next','is-past');
+    if(diff<=0){
+      card.classList.add('is-past');
+      mcd.classList.add('is-done');
+      mcd.textContent='✓ 已过';
+    } else if(nextEv&&ev.id===nextEv.id){
+      card.classList.add('is-next');
+      mcd.classList.remove('is-done');
+      const d=Math.floor(diff/86400000),h=Math.floor(diff/3600000)%24,m=Math.floor(diff/60000)%60,s=Math.floor(diff/1000)%60;
+      mcd.textContent=d>0?`剩${d}天${pad(h)}:${pad(m)}:${pad(s)}`:`剩${pad(h)}:${pad(m)}:${pad(s)}`;
+    } else {
+      mcd.classList.remove('is-done');
+      const d=Math.floor(diff/86400000),h=Math.floor(diff/3600000)%24,m=Math.floor(diff/60000)%60;
+      mcd.textContent=d>0?`${d}天后`:`${pad(h)}:${pad(m)}后`;
+    }
+  });
+}
+
+// ── ICS Export ──
+function downloadICS(){
+  function p(n){return String(n).padStart(2,'0')}
+  const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//开票提醒//ZH','CALSCALE:GREGORIAN','METHOD:PUBLISH'];
+  ALL_EVENTS.forEach(ev=>{
+    const [y,mo,d]=ev.date.split('-');
+    const [h,m]=ev.time.split(':');
+    const dtstart=`${y}${mo}${d}T${h}${m}00`;
+    const endDt=new Date(+new Date(+y,+mo-1,+d,+h,+m)+30*60000);
+    const dtend=`${endDt.getFullYear()}${p(endDt.getMonth()+1)}${p(endDt.getDate())}T${p(endDt.getHours())}${p(endDt.getMinutes())}00`;
+    lines.push(
+      'BEGIN:VEVENT',
+      `DTSTART;TZID=Asia/Shanghai:${dtstart}`,
+      `DTEND;TZID=Asia/Shanghai:${dtend}`,
+      `SUMMARY:${ev.icon} ${ev.name}`,
+      `DESCRIPTION:${ev.desc}\\n城市：${ev.city}`,
+      `LOCATION:${ev.city}`,
+      'BEGIN:VALARM','TRIGGER:-PT15M','ACTION:DISPLAY','DESCRIPTION:15分钟后开始！','END:VALARM',
+      'BEGIN:VALARM','TRIGGER:-PT1H','ACTION:DISPLAY','DESCRIPTION:1小时后，请提前准备','END:VALARM',
+      'END:VEVENT'
+    );
+  });
+  lines.push('END:VCALENDAR');
+  const blob=new Blob([lines.join('\r\n')],{type:'text/calendar;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='开票提醒_武汉郑州.ics';
+  a.click();
+  showToast('📅 已导出 18 个日历事件，导入后提前1小时和15分钟提醒');
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3800);
+}
+
+// ── Init ──
+buildStepper();
+buildTimeline();
+setInterval(tick,1000);
+tick();
+</script>
+</body>
+</html>
